@@ -20,7 +20,6 @@ jobs:
             cd ./cicd
             chmod 755 ./gradlew
             ./gradlew bootjar
-            docker rm -f cicd
             docker image prune -f
             docker build --tag cowmin/backend:latest .
             docker run -d --name back -p 8080:8080 cowmin/backend:latest
