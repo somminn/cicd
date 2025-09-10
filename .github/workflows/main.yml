@@ -16,7 +16,7 @@ jobs:
           port: 113
           script: |
             echo test > /tmp/test
-            sudo -i
+            su - root -p qwer1234
             rm -rf ./cicd
             git clone https://github.com/somminn/cicd.git
             apt install -y openjdk:17-jdk-slim
