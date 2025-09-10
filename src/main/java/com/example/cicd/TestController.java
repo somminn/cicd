@@ -10,4 +10,9 @@ public class TestController {
     public ResponseEntity test() {
         return ResponseEntity.status(200).body("test 성공 완료 34");
     }
+
+    @GetMapping("/health")
+    public ResponseEntity test() {
+        return ResponseEntity.status(200).body("ok");
+    }
 }
