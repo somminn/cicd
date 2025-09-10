@@ -18,9 +18,9 @@ jobs:
             echo test > /tmp/test
             rm -rf ./cicd
             git clone https://github.com/somminn/cicd.git
-            echo 'FROM openjdk:17-jdk-slim
-                  COPY ./build/libs/back-0.0.1-SNAPSHOT.jar /app.jar
+            apt install -y openjdk:17-jdk-slim
+            .\gradlew bootjar
+            echo 'COPY ./build/libs/back-0.0.1-SNAPSHOT.jar /app.jar
                   CMD ["java","-jar","/app.jar"]
                   EXPOSE 8080' > Dockerfile
-             .\gradlew bootjar
             docker build --tag cowmin/backend:v1 .
