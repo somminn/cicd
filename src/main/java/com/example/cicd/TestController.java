@@ -12,7 +12,7 @@ public class TestController {
     }
 
     @GetMapping("/health")
-    public ResponseEntity test() {
+    public ResponseEntity health() {
         return ResponseEntity.status(200).body("ok");
     }
 }
