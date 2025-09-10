@@ -32,7 +32,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/back:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/backend:latest
 
   deploy:
     name: deploy
