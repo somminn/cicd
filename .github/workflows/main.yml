@@ -16,6 +16,7 @@ jobs:
           port: 113
           script: |
             echo test > /tmp/test
+            rm -rf ./cicd
             git clone https://github.com/somminn/cicd.git
             echo 'FROM openjdk:17-jdk-slim
                   COPY ./build/libs/back-0.0.1-SNAPSHOT.jar /app.jar
