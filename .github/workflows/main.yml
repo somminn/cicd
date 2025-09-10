@@ -3,8 +3,8 @@ on:
   push:
     branches: [main]
 jobs:
-  deploy:
-    name: deploy
+  build:
+    name: build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -33,3 +33,21 @@ jobs:
           context: .
           push: true
           tags: cowmin/backend:latest
+
+  deploy:
+    name: deploy
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: run ssh
+        uses: appleboy/ssh-action@v1
+        with:
+          host: 121.140.125.176
+          username: test
+          password: qwer1234
+          port: 113
+          script: |
+            docker rm -f back
+            docker image prune -f
+            docker build --tag cowmin/back:latest .
+            docker run -d --name back -p 8080:8080 cowmin/back:latest
