@@ -32,7 +32,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: cowmin/backend:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/back:latest
 
   deploy:
     name: deploy
@@ -47,7 +47,8 @@ jobs:
           password: qwer1234
           port: 113
           script: |
-            docker rm -f back
-            docker image prune -f
-            docker build --tag cowmin/backend:latest .
-            docker run -d --name back -p 8080:8080 cowmin/backend:latest
+            docker pull cowmin/backend:latest || true
+            docker rm -f back 2>/dev/null || true
+            docker run -d --name back -p 8080:8080 --pull=always cowmin/backend:latest
+
+
