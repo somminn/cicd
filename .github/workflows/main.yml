@@ -47,7 +47,7 @@ jobs:
           password: qwer1234
           port: 113
           script: |
-            docker pull cowmin/backend:latest || true
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/backend:latest || true
             CUR_PORT=`cat /etc/nginx/sites-enabled/default |  grep -oE '8080|8081'`
             if [ "$CUR_PORT" = "8080" ]; then
               OLD_PORT=8080
@@ -60,7 +60,7 @@ jobs:
             echo $OLD_PORT
             echo $NEW_PORT
             
-            docker run -d --name back-$NEW_PORT -p $NEW_PORT:8080 --pull=always ddarahakit2025/back:latest
+            docker run -d --name back-$NEW_PORT -p $NEW_PORT:8080 --pull=always ${{ secrets.DOCKERHUB_USERNAME }}/backend:latest
             
             for i in $(seq 1 36); do
               if RESP="$(curl -fsS --max-time 3 "http://127.0.0.1:${NEW_PORT}/health" || true)"; then
