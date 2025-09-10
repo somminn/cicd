@@ -49,5 +49,5 @@ jobs:
           script: |
             docker rm -f back
             docker image prune -f
-            docker build --tag cowmin/back:latest .
-            docker run -d --name back -p 8080:8080 cowmin/back:latest
+            docker build --tag cowmin/backend:latest .
+            docker run -d --name back -p 8080:8080 cowmin/backend:latest
