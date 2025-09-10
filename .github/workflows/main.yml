@@ -18,5 +18,6 @@ jobs:
             rm -rf ./cicd
             git clone https://github.com/somminn/cicd.git
             cd ./cicd
-            chmod +x ./gradlew bootjar
+            chmod +x ./gradlew
+            ./gradlew bootjar
             docker build --tag cowmin/backend:v1 .
