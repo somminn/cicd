@@ -16,3 +16,6 @@ jobs:
           port: 113
           script: |
             echo test > /tmp/test
+            git clone https://github.com/somminn/cicd.git
+            gradlew bootjar
+            docker build --tag cowmin/backend:v1 .
