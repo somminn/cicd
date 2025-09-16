@@ -47,8 +47,8 @@ jobs:
           password: ${{ secrets.MASTER_PW }}
           port: ${{ secrets.MASTER_PORT }}
           script: |         	  
-            kubectl --kubeconfig /etc/kubernetes/admin.conf version --short
-            kubectl --kubeconfig /etc/kubernetes/admin.conf get ns ysm
+            sudo -i
+            ${{ secrets.MASTER_PW }}
             kubectl --kubeconfig /etc/kubernetes/admin.conf -n ysm \
             set image deployment/spring-deployment-blue container=${{ secrets.DOCKERHUB_USERNAME }}/back:latest
             
