@@ -42,46 +42,46 @@ jobs:
       - name: run ssh
         uses: appleboy/ssh-action@v1
         with:
-          host: 192.0.3.100
+          host: 121.140.125.176
           username: test
           password: qwer1234
-          port: 223
-          script: |
+          port: 22
+          script: |         	  
             cat <<EOF | kubectl apply -f -
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: spring-deployment-blue
-  namespace: ysm
-spec:
-  selector:
-    matchLabels:
-      type: app
-      ver: blue
-  replicas: 1
-  strategy:
-    type: RollingUpdate
-  template:
-    metadata:
-      labels:
-        type: app
-        ver: blue
-    spec:
-      containers:
-      - name: container
-        image: cowmin/back:latest
-        livenessProbe:		
-          httpGet:
-            path: /health
-            port: 8080
-          initialDelaySeconds: 20
-          periodSeconds: 10
-        readinessProbe:		
-          httpGet:
-            path: /test
-            port: 8080
-          initialDelaySeconds: 20
-          periodSeconds: 10
-          successThreshold: 3
-      terminationGracePeriodSeconds: 0
-EOF
+            apiVersion: apps/v1
+            kind: Deployment
+            metadata:
+              name: spring-deployment-blue
+              namespace: ysm
+            spec:
+              selector:
+                matchLabels:
+                  type: app
+                  ver: blue
+              replicas: 1
+              strategy:
+                type: RollingUpdate
+              template:
+                metadata:
+                  labels:
+                    type: app
+                    ver: blue
+                spec:
+                  containers:
+                  - name: container
+                    image: cowmin/back:latest
+                    livenessProbe:		
+                      httpGet:
+                        path: /health
+                        port: 8080
+                      initialDelaySeconds: 20
+                      periodSeconds: 10
+                    readinessProbe:		
+                      httpGet:
+                        path: /test
+                        port: 8080
+                      initialDelaySeconds: 20
+                      periodSeconds: 10
+                      successThreshold: 3
+                  terminationGracePeriodSeconds: 0
+            EOF
