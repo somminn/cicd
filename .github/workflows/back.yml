@@ -32,7 +32,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/spring_basic:${{ github.run_number }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/spring_basic:v${{ github.run_number }}
 
   deploy:
     name: deploy
@@ -95,6 +95,7 @@ jobs:
             EOF
 
             kubectl rollout status deployment/spring-deployment-${NEXT_VER} -n ysm
+			
             cat <<EOF | kubectl apply -f -
             apiVersion: v1
             kind: Service
