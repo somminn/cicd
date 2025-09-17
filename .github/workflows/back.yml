@@ -32,7 +32,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/back:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/spring_basic:${{ github.run_number }}
 
   deploy:
     name: deploy
@@ -46,9 +46,69 @@ jobs:
           username: test
           password: ${{ secrets.MASTER_PW }}
           port: ${{ secrets.MASTER_PORT }}
-          script: |         	  
-            sudo -i
-            ${{ secrets.MASTER_PW }}
-            kubectl --kubeconfig /etc/kubernetes/admin.conf -n ysm \
-            set image deployment/spring-deployment-blue container=${{ secrets.DOCKERHUB_USERNAME }}/back:latest
+          script: |
+            if kubectl get svc nginx-svc1 -n ysm -o wide | grep -q "green"; then
+              CURRENT_VER="green"
+              NEXT_VER="blue"
+            else
+              CURRENT_VER="blue"
+              NEXT_VER="green"
+            fi
             
+            cat <<EOF | kubectl apply -f -
+            apiVersion: apps/v1
+            kind: Deployment
+            metadata:
+              name: spring-deployment-${NEXT_VER}
+              namespace: ysm
+            spec:
+              selector:
+                matchLabels:
+                  type: test
+                  ver: ${NEXT_VER}
+              replicas: 1
+              strategy:
+                type: RollingUpdate
+              template:
+                metadata:
+                  labels:
+                    type: test
+                    ver: ${NEXT_VER}
+                spec:
+                  containers:
+                    - name: container
+                      image: cowmin/spring_basic:${{ github.run_number }}
+                      livenessProbe:
+                        httpGet:
+                          path: /health
+                          port: 8080
+                        initialDelaySeconds: 20
+                        periodSeconds: 10
+                      readinessProbe:
+                        httpGet:
+                          path: /test
+                          port: 8080
+                        initialDelaySeconds: 20
+                        periodSeconds: 10
+                        successThreshold: 3
+                  terminationGracePeriodSeconds: 0
+            EOF
+
+            kubectl rollout status deployment/spring-deployment-${NEXT_VER} -n ysm
+            cat <<EOF | kubectl apply -f -
+            apiVersion: v1
+            kind: Service
+            metadata:
+              name: nginx-svc1
+              namespace: ysm
+            spec:
+              selector:
+                type: test
+                ver: ${NEXT_VER}
+              ports:
+                - port: 8080
+                  targetPort: 8080
+              type: LoadBalancer
+            EOF
+            
+            kubectl scale deployment spring-deployment-${CURRENT_VER} -n ysm --replicas=0
