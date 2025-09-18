@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class TestController {
     @GetMapping("/test")
     public ResponseEntity test() {
-        return ResponseEntity.status(200).body("test 성공 완료 47");
+        return ResponseEntity.status(200).body("test 성공 완료 48");
     }
 
     @GetMapping("/health")
